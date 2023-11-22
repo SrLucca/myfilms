@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<body>
+    {% block content %}
+        <head>
+            <title>{% block title %} Meus Filmes {% endblock %}</title>
+        </head>
+
+        <form method="post" enctype="multipart/form-data" action="/import_sheet">
+            {% csrf_token %}
+            <input type="file" name="sheet" accept=".xlsx">
+            <button id="importButton">Importar planilha</button>
+        </form>
+        
+        <button type="button" onclick="newMovie()" id="importButton">Adicionar Filme</button>
+        
+        <div id="addPanel" style="display: none;">
+            <form action="" method="post">
+                {% csrf_token %}
+                
+                {{form}}
+                
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+
+        <table id="filmsTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Assistido em</th>
+                    <th>Gênero</th>
+                    <th>Assistido</th>
+                    <th></th>
+                </tr>
+
+                {% for movie in movies %}
+                    <tr>
+                        <td>{{movie.title}}</td>
+                        {% if movie.watched_date == None %}
+                            <td>Não assistido</td>
+                        {% else %}
+                            <td>{{movie.watched_date}}</td>
+                        {% endif %}
+
+
+                        <td>{{movie.gender}}</td>
+                        {% if movie.wish_list == False  %}
+                            <td style="width: 10%;"><img src="{% static 'img/aceitar.png' %}" alt="quero assistir"></td>
+                            <td></td>
+                        {% else %}
+                            <td style="width: 10%;"><img src="{% static 'img/claro.png' %}" alt="quero assistir"></td>
+                            
+                            <td><button type="button" onclick="checkWatched()">Marcar Assistido</button></td>
+                            <form style="display: none;" action="/edit/{{movie.id}}" method="post" id="editMovie">{% csrf_token %}</form>
+                        {% endif %}
+                        
+                    </tr>
+                {% endfor %}
+            </thead>
+            <tbody id="filmsBody"></tbody>
+        </table>
+
+        <h2>Relatório</h2>
+
+    <canvas style="padding-left: 0;padding-right: 0;margin-left: auto;margin-right: auto;display: block;" id="myChart" width="400" height="400"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Assistido', 'Não Assistido'],
+            datasets: [{
+            label: 'Filmes',
+            data: [{{ watched_count }}, {{ wish_list_count }}],
+            backgroundColor: [
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+                'rgba(75, 192, 192, 1)',
+                'rgba(255, 99, 132, 1)',
+            ],
+            borderWidth: 1
+            }]
+        },
+            options: {
+            scales: {
+            y: {
+                beginAtZero: true
+            }
+            }
+        }
+        });
+
+        myChart.canvas.parentNode.style.height = '400px';
+    </script>
+        <script src="{% static 'js/script.js' %}"></script>
+    {% endblock %}
+
+</body>
+</html>
+
+
