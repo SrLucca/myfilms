@@ -13,17 +13,20 @@ Desafio:
 Candidato: Lucca Torrezilha Soares
 
 Dependências principais:
-    Django
-    Pandas
-    Celery
-    Redis
+    
+    1 - Django
+    2 - Pandas
+    3 Celery
+    4 - Redis
     Disponível em requirements.txt
 
 Outras Dependências:
+    
     Redis Server: Como broker do Celery -> Para Windows disponível no .zip no projeto
 
 Como rodar o projeto:
-    - Instale as dependências
-    - Rode o redis server
-    - Rode o comando em um terminal separado: python -m celery -A myfilms worker -l info
-    - Em outro terminal, no diretório myfilms/myfilms, rode: python manage.py runserver
+    
+    1 - Instale as dependências
+    2 - Rode o redis server
+    3 - Rode o comando em um terminal separado: python -m celery -A myfilms worker -l info
+    4 - Em outro terminal, no diretório myfilms/myfilms, rode: python manage.py runserver
