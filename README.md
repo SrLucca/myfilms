@@ -16,7 +16,7 @@ Dependências principais:
     
     1 - Django
     2 - Pandas
-    3 Celery
+    3 - Celery
     4 - Redis
     Disponível em requirements.txt
 
